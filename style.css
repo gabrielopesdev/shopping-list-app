@@ -2,3 +2,10 @@
     margin: 0;
     padding: 0;
 }
+
+span { 
+    color: white;
+    display: inline-block;
+    background-color: grey;
+    padding: 10px;
+}
