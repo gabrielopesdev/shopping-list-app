@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"
 
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://shopping-app-ab654-default-rtdb.firebaseio.com/"
@@ -23,11 +23,14 @@ buttonAddEl.addEventListener("click", ()=>{
     clearShoppingListEl()
     
     onValue(itensInDB, (list)=>{
-
-        var listArray = Object.values(list.val())
+ 
+        var listArray = Object.entries(list.val())
             
         for(let i=0; i < listArray.length; i++) {
-            addItemToList(listArray[i])
+
+            let currentItem = listArray[i] 
+            addItemToListEl(currentItem)
+
         }   
     })
 })
@@ -36,12 +39,25 @@ function clearInputFieldEl(input) {
     input.value = ""
 }
 
-function addItemToList(value) {
-    shoppingListEl.innerHTML += `<span>${value}</span>`
+function addItemToListEl(item) {
+
+    let itemID = item[0]
+    let itemValue = item[1]
+
+    let newEl = document.createElement("button")
+
+    newEl.textContent = itemValue
+
+    shoppingListEl.append(newEl)
+
+    newEl.addEventListener("dblclick", ()=> {
+
+        let exactLocationOfItemListIdBd = ref(database, `listShop/${itemID}`)
+        remove(exactLocationOfItemListIdBd)
+
+    })
 }
 
 function clearShoppingListEl() {
     shoppingListEl.innerHTML = ""
 }
-
-
